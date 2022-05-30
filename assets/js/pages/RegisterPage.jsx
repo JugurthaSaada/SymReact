@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
 import UsersAPI from '../services/usersAPI';
 
@@ -35,6 +36,7 @@ const RegisterPage = ({history}) => {
         if(user.password !== user.passwordConfirm){
             apiErrors.passwordConfirm = "Vos mot de passe ne sont pas identique";
             setErrors(apiErrors);
+            toast.error("Attention, une erreur est survenue.");
             return;
         }
 
@@ -42,7 +44,7 @@ const RegisterPage = ({history}) => {
             await UsersAPI.register(user);
             setErrors({});
             history.replace('/login');
-             //TODO: flash notif de success
+            toast.success("Vous êtes inscrit avec succès, vous pouvez désormais vous connecter.");
         } catch ({response}) {
             const { violations } = response.data;
             if(violations){
@@ -51,7 +53,7 @@ const RegisterPage = ({history}) => {
                 });
 
                 setErrors(apiErrors);
-                //TODO: flash notif de error
+                toast.error("Attention, une erreur est survenue.");
             }
         }
         console.log(user);

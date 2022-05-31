@@ -23,15 +23,19 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     public function findNextChrono(User $user){
-        return $this->createQueryBuilder("i")
-                    ->select("i.chrono")
-                    ->join("i.customer", "c")
-                    ->where("c.user = :user")
-                    ->setParameter("user", $user)
-                    ->orderBy("i.chrono", "DESC")
-                    ->setMaxResults(1)
-                    ->getQuery()
-                    ->getSingleScalarResult() + 1;
+       try{
+            return $this->createQueryBuilder("i")
+            ->select("i.chrono")
+            ->join("i.customer", "c")
+            ->where("c.user = :user")
+            ->setParameter("user", $user)
+            ->orderBy("i.chrono", "DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult() + 1;
+        } catch(\Exception $e){
+            return 1;
+       }
     }
 
     public function add(Invoice $entity, bool $flush = false): void
